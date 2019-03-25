@@ -22,6 +22,7 @@ namespace Pathfinding
     {
         private CustomGrid grid;
         private Unit[] units;
+        private GridWindow gridWindow;
 
         public MainWindow()
         {
@@ -46,14 +47,10 @@ namespace Pathfinding
                 this.grid.SetPlace(positionX, positionY, 3);
             }
 
-            //this.grid.SetUnitPlaces(this.units);
             this.grid.PrintGrid();
-
-            var gridWindow = new GridWindow();
+            this.gridWindow = new GridWindow();
             var grid = gridWindow.grid;
             var populatedGrid = PopulateGrid(grid);
-            //grid.ShowGridLines = true;
-            //gridWindow.Content = populatedGrid;
             gridWindow.Show();
         }
 
@@ -67,8 +64,7 @@ namespace Pathfinding
                 for (int row = 0; row < this.grid.GetGridX(); row++)
                 {
                     RowDefinition rowDef = new RowDefinition();
-                    Button button = new Button();
-                    button.Content = this.grid.GetGridPosition(row, column);
+                    Button button = ButtonStyler(row, column);
                     Grid.SetRow(button, row);
                     Grid.SetColumn(button, column);
                     rowDef.Height = GridLength.Auto;
@@ -77,6 +73,30 @@ namespace Pathfinding
                 }
             }
             return grid;
+        }
+
+        private Button ButtonStyler(int row, int column)
+        {
+            Button button = new Button();
+            button.ToolTip = row + " " + column;
+            if (this.grid.GetGridPosition(row, column) == 3)
+            {
+                button.Content = " U ";
+                button.Foreground = Brushes.White;
+                button.Background = Brushes.Green;
+            }
+            else if (this.grid.GetGridPosition(row, column) == 0)
+            {
+                button.Content = "   ";
+                button.Foreground = Brushes.Black;
+                button.Background = Brushes.White;
+            }
+            else
+            {
+                button.Content = "  ";
+                button.Background = Brushes.Gray;
+            }
+            return button;
         }
     }
 }

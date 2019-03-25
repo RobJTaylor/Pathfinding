@@ -5,17 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pathfinding"
         mc:Ignorable="d"
-        Title="Pathfinding" Height="243.714" Width="183.809" ResizeMode="NoResize">
+        Title="Pathfinding" Height="243.714" Width="186.857" ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="107*"/>
-            <ColumnDefinition Width="71*"/>
         </Grid.ColumnDefinitions>
         <Label Content="Grid Size:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <TextBox x:Name="TB_GridX" HorizontalAlignment="Left" Height="23" Margin="10,22,0,0" TextWrapping="Wrap" Text="64" VerticalAlignment="Top" Width="158" Grid.ColumnSpan="2"/>
         <TextBox x:Name="TB_GridY" HorizontalAlignment="Left" Height="23" Margin="10,46,0,0" TextWrapping="Wrap" Text="64" VerticalAlignment="Top" Width="158" Grid.ColumnSpan="2"/>
         <Label Content="Probability of 0 Tile (1 - 100):" HorizontalAlignment="Left" Margin="0,74,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-        <TextBox x:Name="TB_Probability" HorizontalAlignment="Left" Height="23" Margin="10,97,0,0" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="158" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="TB_Probability" HorizontalAlignment="Left" Height="23" Margin="10,97,0,0" TextWrapping="Wrap" Text="80" VerticalAlignment="Top" Width="158" Grid.ColumnSpan="2"/>
         <Button Content="Generate Grid" HorizontalAlignment="Left" Margin="10,184,0,0" VerticalAlignment="Top" Width="158" Click="Button_Click" Grid.ColumnSpan="2"/>
         <Label Content="Number of Units:" HorizontalAlignment="Left" Margin="0,125,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="TB_Units" HorizontalAlignment="Left" Height="21" Margin="10,151,0,0" TextWrapping="Wrap" Text="15" VerticalAlignment="Top" Width="158" Grid.ColumnSpan="2"/>
