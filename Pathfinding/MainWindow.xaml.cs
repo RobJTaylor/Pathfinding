@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.VisualBasic;
 
 namespace Pathfinding
 {
@@ -51,6 +52,7 @@ namespace Pathfinding
             this.gridWindow = new GridWindow();
             var grid = gridWindow.grid;
             var populatedGrid = PopulateGrid(grid);
+            gridWindow.Owner = this;
             gridWindow.Show();
         }
 
@@ -79,6 +81,7 @@ namespace Pathfinding
         {
             Button button = new Button();
             button.ToolTip = row + " " + column;
+            button.Click += delegate { MoveUnit(row, column); };
             if (this.grid.GetGridPosition(row, column) == 3)
             {
                 button.Content = " U ";
@@ -97,6 +100,18 @@ namespace Pathfinding
                 button.Background = Brushes.Gray;
             }
             return button;
+        }
+
+        private void MoveUnit(int x, int y)
+        {
+            if (this.grid.GetGridPosition(x, y) != 3)
+            {
+                MessageBox.Show("Please select a unit to move");
+            } else
+            {
+                int newX = Convert.ToInt32(Interaction.InputBox("New X Position:", "Move Unit", "0"));
+                int newY = Convert.ToInt32(Interaction.InputBox("New Y Position:", "Move Unit", "0"));
+            }            
         }
     }
 }
