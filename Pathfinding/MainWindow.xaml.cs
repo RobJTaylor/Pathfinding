@@ -29,8 +29,9 @@ namespace Pathfinding
         {
             int x = Convert.ToInt32(TB_GridX.Text);
             int y = Convert.ToInt32(TB_GridY.Text);
+            int probability = Convert.ToInt32(TB_Probability.Text);
 
-            var initialisedGrid = new CustomGrid(x,y);
+            var initialisedGrid = new CustomGrid(x,y,probability);
         }
     }
 }

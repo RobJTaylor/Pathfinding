@@ -11,7 +11,7 @@
         <TextBox x:Name="TB_GridX" HorizontalAlignment="Left" Height="23" Margin="10,22,0,0" TextWrapping="Wrap" Text="X" VerticalAlignment="Top" Width="158"/>
         <TextBox x:Name="TB_GridY" HorizontalAlignment="Left" Height="23" Margin="10,46,0,0" TextWrapping="Wrap" Text="Y" VerticalAlignment="Top" Width="158"/>
         <Label Content="Probability of 0 Tile (1 - 100):" HorizontalAlignment="Left" Margin="0,74,0,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="10,97,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="158"/>
+        <TextBox x:Name="TB_Probability" HorizontalAlignment="Left" Height="23" Margin="10,97,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="158"/>
         <Button Content="Generate Grid" HorizontalAlignment="Left" Margin="10,125,0,0" VerticalAlignment="Top" Width="158" Click="Button_Click"/>
 
     </Grid>
