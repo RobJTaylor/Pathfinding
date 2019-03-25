@@ -6,5 +6,9 @@
         xmlns:local="clr-namespace:Pathfinding"
         mc:Ignorable="d"
         Title="GridWindow" Height="450" Width="800">
-    <Grid x:Name="grid"/>
+
+    <ScrollViewer Margin="0,0,0.286,-0.286" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <Grid x:Name="grid">
+        </Grid>
+    </ScrollViewer>
 </Window>

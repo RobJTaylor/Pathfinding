@@ -51,8 +51,15 @@ namespace Pathfinding
 
             var gridWindow = new GridWindow();
             var grid = gridWindow.grid;
+            var populatedGrid = PopulateGrid(grid);
             //grid.ShowGridLines = true;
-            for(int column = 0; column < this.grid.GetGridY(); column++)
+            //gridWindow.Content = populatedGrid;
+            gridWindow.Show();
+        }
+
+        private Grid PopulateGrid(Grid grid)
+        {
+            for (int column = 0; column < this.grid.GetGridY(); column++)
             {
                 ColumnDefinition colDef = new ColumnDefinition();
                 colDef.Width = GridLength.Auto;
@@ -61,7 +68,7 @@ namespace Pathfinding
                 {
                     RowDefinition rowDef = new RowDefinition();
                     Button button = new Button();
-                    button.Content = "TEST";
+                    button.Content = this.grid.GetGridPosition(row, column);
                     Grid.SetRow(button, row);
                     Grid.SetColumn(button, column);
                     rowDef.Height = GridLength.Auto;
@@ -69,8 +76,7 @@ namespace Pathfinding
                     grid.Children.Add(button);
                 }
             }
-            gridWindow.Content = grid;
-            gridWindow.Show();
+            return grid;
         }
     }
 }
