@@ -48,6 +48,29 @@ namespace Pathfinding
 
             //this.grid.SetUnitPlaces(this.units);
             this.grid.PrintGrid();
+
+            var gridWindow = new GridWindow();
+            var grid = gridWindow.grid;
+            //grid.ShowGridLines = true;
+            for(int column = 0; column < this.grid.GetGridY(); column++)
+            {
+                ColumnDefinition colDef = new ColumnDefinition();
+                colDef.Width = GridLength.Auto;
+                grid.ColumnDefinitions.Add(colDef);
+                for (int row = 0; row < this.grid.GetGridX(); row++)
+                {
+                    RowDefinition rowDef = new RowDefinition();
+                    Button button = new Button();
+                    button.Content = "TEST";
+                    Grid.SetRow(button, row);
+                    Grid.SetColumn(button, column);
+                    rowDef.Height = GridLength.Auto;
+                    grid.RowDefinitions.Add(rowDef);
+                    grid.Children.Add(button);
+                }
+            }
+            gridWindow.Content = grid;
+            gridWindow.Show();
         }
     }
 }
