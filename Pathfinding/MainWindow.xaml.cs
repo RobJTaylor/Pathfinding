@@ -24,5 +24,13 @@ namespace Pathfinding
         {
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            int x = Convert.ToInt32(TB_GridX.Text);
+            int y = Convert.ToInt32(TB_GridY.Text);
+
+            var initialisedGrid = new CustomGrid(x,y);
+        }
     }
 }
