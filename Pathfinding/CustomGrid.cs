@@ -18,7 +18,7 @@ namespace Pathfinding
             this.x = x;
             this.y = y;
 
-            writeGrid();
+            PrintGrid();
         }
 
         public int GetGridX()
@@ -31,7 +31,7 @@ namespace Pathfinding
             return this.y;
         }
 
-        public void writeGrid()
+        public void PrintGrid()
         {
             Console.WriteLine(" === Grid Contents ===");
             for (int y = 0; y < this.y; y++)
@@ -42,6 +42,11 @@ namespace Pathfinding
                     Console.Write(this.grid[x,y] + " ");
                 }
             }
+        }
+
+        public void PopulateGrid()
+        {
+
         }
     }
 }
