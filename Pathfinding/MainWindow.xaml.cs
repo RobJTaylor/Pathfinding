@@ -87,6 +87,7 @@ namespace Pathfinding
             Button button = new Button();
             button.ToolTip = row + " " + column;
             button.Click += delegate { MoveUnit(row, column); };
+            button.Name = "_" + row.ToString() + column.ToString();
             if (this.grid.GetGridPosition(row, column).GetSpaceOccupant() >= 0)
             {
                 button.Content = " U ";
@@ -130,18 +131,53 @@ namespace Pathfinding
                     int unit = this.grid.GetGridPosition(x, y).GetSpaceOccupant();
                     this.grid.GetGridPosition(x, y).RemoveOccupant();
 
-                    for (int space = this.xSpaces.Count - 1; space > 0; space--)
+                    for (int space = this.xSpaces.Count - 1; space >= 0; space--)
                     {
-                        this.grid.GetGridPosition(xSpaces[space], ySpaces[space]).SetSpaceOccupant(unit);
-                        //Redraw grid
-                        if (space != 0)
+                        if (space < this.xSpaces.Count - 1)
                         {
-                            this.grid.GetGridPosition(xSpaces[space], ySpaces[space]).RemoveOccupant();
+                            //this.grid.GetGridPosition(xSpaces[space + 1], ySpaces[space + 1]).RemoveOccupant();
+                            this.grid.SetPlace(xSpaces[space+1], ySpaces[space+1], xSpaces[space], ySpaces[space], unit);
+                            Dispatcher.Invoke(new Action(() => { RedrawGrid(xSpaces[space + 1], ySpaces[space + 1], xSpaces[space], ySpaces[space]); }), System.Windows.Threading.DispatcherPriority.ContextIdle, null);
                         }
-                        Console.WriteLine("Unit " + unit + "moved to: X " + xSpaces[space] + " Y " + ySpaces[space]);
+
+                        //this.grid.GetGridPosition(xSpaces[space], ySpaces[space]).SetSpaceOccupant(unit);
+                        Console.WriteLine("Unit " + unit + " moved to: X " + xSpaces[space] + " Y " + ySpaces[space]);
                     }
+
+                    //this.grid.SetPlace(xSpaces[0], ySpaces[0], newX, newY, unit);
+                    //RedrawGrid(xSpaces[0], ySpaces[0], newX, newY);
                 }
             }            
+        }
+
+        private void RedrawGrid(int oldX, int oldY, int newX, int newY)
+        {
+            var grid = this.gridWindow.grid;
+
+            //Remove old button and replace
+            UIElement oldChild = grid.FindName("_" + oldX.ToString() + oldY.ToString()) as UIElement;
+            grid.Children.Remove(oldChild);
+            RowDefinition oldDef = new RowDefinition();
+            Button oldButton = ButtonStyler(oldX, oldY);
+            Grid.SetRow(oldButton, oldX);
+            Grid.SetColumn(oldButton, oldY);
+            oldDef.Height = GridLength.Auto;
+            grid.RowDefinitions.Add(oldDef);
+            grid.Children.Add(oldButton);
+
+            Thread.Sleep(50);
+    
+            //Remove new button and replace
+            UIElement newChild = grid.FindName("_" + newX.ToString() + newY.ToString()) as UIElement;
+            grid.Children.Remove(newChild);
+            RowDefinition newDef = new RowDefinition();
+            Button newButton = ButtonStyler(newX, newY);
+            Grid.SetRow(newButton, newX);
+            Grid.SetColumn(newButton, newY);
+            newDef.Height = GridLength.Auto;
+            grid.RowDefinitions.Add(newDef);
+            grid.Children.Add(newButton);
+
         }
 
         private int FindPath(int x, int y, int newX, int newY, int lastX, int lastY)

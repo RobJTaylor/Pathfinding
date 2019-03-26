@@ -82,7 +82,7 @@ namespace Pathfinding
             }
         }
 
-        public void SetPlace(int oldX, int oldY, int unit, int newX, int newY)
+        public void SetPlace(int oldX, int oldY, int newX, int newY, int unit)
         {
             this.grid[oldX, oldY].RemoveOccupant();
             this.grid[newX, newY].SetSpaceOccupant(unit);
