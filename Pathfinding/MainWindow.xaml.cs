@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -113,7 +114,12 @@ namespace Pathfinding
             {
                 int newX = Convert.ToInt32(Interaction.InputBox("New X Position:", "Move Unit", "0"));
                 int newY = Convert.ToInt32(Interaction.InputBox("New Y Position:", "Move Unit", "0"));
-                FindPath(x, y, newX, newY, x, y);
+
+                //Spin off a new thread, set stack size to 700 Mb
+                //This is fixes a potential stackoverflow.
+                var thread = new Thread(_ => FindPath(x, y, newX, newY, x, y), 700000000);
+                thread.Start();
+                thread.Join();
             }            
         }
 
@@ -132,6 +138,7 @@ namespace Pathfinding
                 return 1;
             }
 
+            //We can move left
             if(possibleSpaces[0] == 1 && x - 1 != lastX)
             {
                 lastX = x;
@@ -147,10 +154,15 @@ namespace Pathfinding
 
                 if (check == true && x - 1 > 0)
                 {
-                    FindPath(x - 1, y, newX, newY, lastX, lastY);
+                    int findPath = FindPath(x - 1, y, newX, newY, lastX, lastY);
+                    if (findPath == 1)
+                    {
+                        return 1;
+                    }
                 }
             }
 
+            //We can move right
             if (possibleSpaces[1] == 1 && x + 1 != lastX)
             {
                 lastX = x;
@@ -166,10 +178,15 @@ namespace Pathfinding
 
                 if (check == true && x + 1 < this.grid.GetGridX() - 1)
                 {
-                    FindPath(x + 1, y, newX, newY, lastX, lastY);
+                    int findPath = FindPath(x + 1, y, newX, newY, lastX, lastY);
+                    if (findPath == 1)
+                    {
+                        return 1;
+                    }
                 }
             }
 
+            //We can move down
             if (possibleSpaces[2] == 1 && y + 1 != lastY)
             {
                 lastX = x;
@@ -185,10 +202,15 @@ namespace Pathfinding
 
                 if (check == true && y + 1 < this.grid.GetGridY() - 1)
                 {
-                    FindPath(x, y + 1, newX, newY, lastX, lastY);
+                    int findPath = FindPath(x, y + 1, newX, newY, lastX, lastY);
+                    if (findPath == 1)
+                    {
+                        return 1;
+                    }
                 }
             }
 
+            //We can move up
             if (possibleSpaces[3] == 1 && y - 1 != lastY)
             {
                 lastX = x;
@@ -204,7 +226,11 @@ namespace Pathfinding
 
                 if (check == true && y - 1 > 0)
                 {
-                    FindPath(x, y - 1, newX, newY, lastX, lastY);
+                    int findPath = FindPath(x, y - 1, newX, newY, lastX, lastY);
+                    if (findPath == 1)
+                    {
+                        return 1;
+                    }
                 }
             }
 
