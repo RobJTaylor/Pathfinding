@@ -23,10 +23,12 @@ namespace Pathfinding
                 int x = rand.Next(grid.GetGridX());
                 int y = rand.Next(grid.GetGridY());
 
-                if (grid.GetGridPosition(x,y) == 0)
+                if (grid.GetGridPosition(x,y).GetSpaceType() == 0 && grid.GetGridPosition(x,y).GetSpaceOccupant() < 0)
                 {
                     this.positionX = x;
                     this.positionY = y;
+                    grid.GetGridPosition(x, y).SetSpaceOccupant(id);
+                    Console.WriteLine(x + y + " OCCUPIED");
                     unitSet = true;
                 }
             }

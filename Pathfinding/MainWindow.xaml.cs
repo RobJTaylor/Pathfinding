@@ -27,6 +27,8 @@ namespace Pathfinding
         private GridWindow gridWindow;
         private List<int> xChecked = new List<int>();
         private List<int> yChecked = new List<int>();
+        private List<int> xSpaces = new List<int>();
+        private List<int> ySpaces = new List<int>();
  
         public MainWindow()
         {
@@ -48,7 +50,7 @@ namespace Pathfinding
                 this.units[unit] = new Unit(unit, this.grid);
                 int positionX = this.units[unit].GetPositionX();
                 int positionY = this.units[unit].GetPositionY();
-                this.grid.SetPlace(positionX, positionY, 3);
+                this.grid.GetGridPosition(positionX,positionY).SetSpaceOccupant(unit);
             }
 
             this.grid.PrintGrid();
@@ -85,13 +87,13 @@ namespace Pathfinding
             Button button = new Button();
             button.ToolTip = row + " " + column;
             button.Click += delegate { MoveUnit(row, column); };
-            if (this.grid.GetGridPosition(row, column) == 3)
+            if (this.grid.GetGridPosition(row, column).GetSpaceOccupant() >= 0)
             {
                 button.Content = " U ";
                 button.Foreground = Brushes.White;
                 button.Background = Brushes.Green;
             }
-            else if (this.grid.GetGridPosition(row, column) == 0)
+            else if (this.grid.GetGridPosition(row, column).GetSpaceType() == 0)
             {
                 button.Content = "   ";
                 button.Foreground = Brushes.Black;
@@ -107,7 +109,7 @@ namespace Pathfinding
 
         private void MoveUnit(int x, int y)
         {
-            if (this.grid.GetGridPosition(x, y) != 3)
+            if (this.grid.GetGridPosition(x, y).GetSpaceOccupant() < 0)
             {
                 MessageBox.Show("Please select a unit to move");
             } else
@@ -115,11 +117,21 @@ namespace Pathfinding
                 int newX = Convert.ToInt32(Interaction.InputBox("New X Position:", "Move Unit", "0"));
                 int newY = Convert.ToInt32(Interaction.InputBox("New Y Position:", "Move Unit", "0"));
 
-                //Spin off a new thread, set stack size to 700 Mb
-                //This is fixes a potential stackoverflow.
-                var thread = new Thread(_ => FindPath(x, y, newX, newY, x, y), 700000000);
+                //Spin off a new thread, set stack size to 70 Mb
+                //This fixes a potential stackoverflow.
+                int returnValue = 0;
+                var thread = new Thread(_ => returnValue = FindPath(x, y, newX, newY, x, y), 70000000);
                 thread.Start();
                 thread.Join();
+
+                //We have found the correct space, start moving unit
+                if (returnValue == 1)
+                {
+                    for (int space = 0; space < this.xSpaces.Count; space++)
+                    {
+                        
+                    }
+                }
             }            
         }
 
@@ -135,11 +147,13 @@ namespace Pathfinding
             if(x == newX && y == newY)
             {
                 MessageBox.Show("Space found!!");
+                this.xSpaces.Add(x);
+                this.ySpaces.Add(y);
                 return 1;
             }
 
             //We can move left
-            if(possibleSpaces[0] == 1 && x - 1 != lastX)
+            if(possibleSpaces[0] == 1)
             {
                 lastX = x;
                 lastY = y;
@@ -157,13 +171,15 @@ namespace Pathfinding
                     int findPath = FindPath(x - 1, y, newX, newY, lastX, lastY);
                     if (findPath == 1)
                     {
+                        this.xSpaces.Add(x);
+                        this.ySpaces.Add(y);
                         return 1;
                     }
                 }
             }
 
             //We can move right
-            if (possibleSpaces[1] == 1 && x + 1 != lastX)
+            if (possibleSpaces[1] == 1)
             {
                 lastX = x;
                 lastY = y;
@@ -181,13 +197,15 @@ namespace Pathfinding
                     int findPath = FindPath(x + 1, y, newX, newY, lastX, lastY);
                     if (findPath == 1)
                     {
+                        this.xSpaces.Add(x);
+                        this.ySpaces.Add(y);
                         return 1;
                     }
                 }
             }
 
             //We can move down
-            if (possibleSpaces[2] == 1 && y + 1 != lastY)
+            if (possibleSpaces[2] == 1)
             {
                 lastX = x;
                 lastY = y;
@@ -205,13 +223,15 @@ namespace Pathfinding
                     int findPath = FindPath(x, y + 1, newX, newY, lastX, lastY);
                     if (findPath == 1)
                     {
+                        this.xSpaces.Add(x);
+                        this.ySpaces.Add(y);
                         return 1;
                     }
                 }
             }
 
             //We can move up
-            if (possibleSpaces[3] == 1 && y - 1 != lastY)
+            if (possibleSpaces[3] == 1)
             {
                 lastX = x;
                 lastY = y;
@@ -229,6 +249,8 @@ namespace Pathfinding
                     int findPath = FindPath(x, y - 1, newX, newY, lastX, lastY);
                     if (findPath == 1)
                     {
+                        this.xSpaces.Add(x);
+                        this.ySpaces.Add(y);
                         return 1;
                     }
                 }
@@ -246,22 +268,26 @@ namespace Pathfinding
                 possibleSpaces[i] = 0;
             }
 
-            if (x - 1 >= 0 && this.grid.GetGridPosition(x - 1, y) != 3 && this.grid.GetGridPosition(x - 1, y) != 1)
+            //Left
+            if (x - 1 >= 0 && this.grid.GetGridPosition(x - 1, y).GetSpaceOccupant() == -1 && this.grid.GetGridPosition(x - 1, y).GetSpaceType() == 0)
             {
                 possibleSpaces[0] = 1;
             }
 
-            if (x + 1 <= this.grid.GetGridX() && this.grid.GetGridPosition(x + 1, y) != 3 && this.grid.GetGridPosition(x + 1, y) != 1)
+            //Right
+            if (x + 1 <= this.grid.GetGridX() && this.grid.GetGridPosition(x + 1, y).GetSpaceOccupant() == -1 && this.grid.GetGridPosition(x + 1, y).GetSpaceType() == 0)
             {
                 possibleSpaces[1] = 1;
             }
 
-            if (y + 1 <= this.grid.GetGridY() && this.grid.GetGridPosition(x, y + 1) != 3 && this.grid.GetGridPosition(x, y + 1) != 1)
+            //Down
+            if (y + 1 <= this.grid.GetGridY() && this.grid.GetGridPosition(x, y + 1).GetSpaceOccupant() == -1 && this.grid.GetGridPosition(x, y + 1).GetSpaceType() == 0)
             {
                 possibleSpaces[2] = 1;
             }
 
-            if (y - 1 >= 0 && this.grid.GetGridPosition(x, y - 1) != 3 && this.grid.GetGridPosition(x, y - 1) != 1)
+            //Up
+            if (y - 1 >= 0 && this.grid.GetGridPosition(x, y - 1).GetSpaceOccupant() == -1 && this.grid.GetGridPosition(x, y - 1).GetSpaceType() == 0)
             {
                 possibleSpaces[3] = 1;
             }

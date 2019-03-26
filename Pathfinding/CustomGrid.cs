@@ -8,7 +8,7 @@ namespace Pathfinding
 {
     class CustomGrid
     {
-        private int[,] grid;
+        private GridSpace[,] grid;
         private int x;
         private int y;
         private int probability;
@@ -16,7 +16,7 @@ namespace Pathfinding
 
         public CustomGrid(int x, int y, int probability, int units)
         {
-            this.grid = new int[x, y];
+            this.grid = new GridSpace[x, y];
             this.x = x;
             this.y = y;
             this.probability = probability;
@@ -34,7 +34,14 @@ namespace Pathfinding
                 Console.WriteLine("");
                 for (int x = 0; x < this.x; x++)
                 {
-                    Console.Write(this.grid[x,y] + " ");
+                    if(this.grid[x,y].GetSpaceOccupant() > 0)
+                    {
+                        Console.Write(this.grid[x,y].GetSpaceOccupant());
+                    }
+                    else
+                    {
+                        Console.Write(this.grid[x, y].GetSpaceType() + " ");
+                    }
                 }
             }
         }
@@ -55,16 +62,19 @@ namespace Pathfinding
 
                     if(spaces - currentSpace == this.units - usableTerrain || spaces - currentSpace < this.units - usableTerrain)
                     {
-                        this.grid[x, y] = 0;
+                        GridSpace space = new GridSpace(0);
+                        this.grid[x, y] = space;
                         usableTerrain++;
                     }
                     else if (rand < this.probability)
                     {
-                        this.grid[x, y] = 0;
+                        GridSpace space = new GridSpace(0);
+                        this.grid[x, y] = space;
                         usableTerrain++;
                     } else
                     {
-                        this.grid[x, y] = 1;
+                        GridSpace space = new GridSpace(1);
+                        this.grid[x, y] = space;
                     }
 
                     currentSpace++;
@@ -72,22 +82,9 @@ namespace Pathfinding
             }
         }
 
-        public void SetUnitPlaces(Unit[] units)
-        {
-            for(int unit = 0; unit <= units.Length; unit++)
-            {
-                int positionX = units[unit].GetPositionX();
-                int positionY = units[unit].GetPositionY();
-                this.grid[positionX,positionY] = 3;
-            }
-
-            Console.WriteLine(" === Grid with Units ===");
-            PrintGrid();
-        }
-
         public void SetPlace(int x,int y,int value)
         {
-            this.grid[x, y] = value;
+            this.grid[x, y].SetSpaceOccupant(value);
         }
 
         // Getters and Setters
@@ -101,12 +98,12 @@ namespace Pathfinding
             return this.y;
         }
 
-        public int[,] GetGrid()
+        public GridSpace[,] GetGrid()
         {
             return this.grid;
         }
 
-        public int GetGridPosition(int x, int y)
+        public GridSpace GetGridPosition(int x, int y)
         {
             return this.grid[x, y];
         }
