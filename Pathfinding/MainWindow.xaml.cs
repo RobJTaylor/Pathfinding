@@ -127,9 +127,18 @@ namespace Pathfinding
                 //We have found the correct space, start moving unit
                 if (returnValue == 1)
                 {
-                    for (int space = 0; space < this.xSpaces.Count; space++)
+                    int unit = this.grid.GetGridPosition(x, y).GetSpaceOccupant();
+                    this.grid.GetGridPosition(x, y).RemoveOccupant();
+
+                    for (int space = this.xSpaces.Count - 1; space > 0; space--)
                     {
-                        
+                        this.grid.GetGridPosition(xSpaces[space], ySpaces[space]).SetSpaceOccupant(unit);
+                        //Redraw grid
+                        if (space != 0)
+                        {
+                            this.grid.GetGridPosition(xSpaces[space], ySpaces[space]).RemoveOccupant();
+                        }
+                        Console.WriteLine("Unit " + unit + "moved to: X " + xSpaces[space] + " Y " + ySpaces[space]);
                     }
                 }
             }            

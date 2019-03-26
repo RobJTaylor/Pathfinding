@@ -32,7 +32,7 @@ namespace Pathfinding
             this.occupant = occupantId;
         }
 
-        public void removeOccupant()
+        public void RemoveOccupant()
         {
             this.occupant = -1;
         }
