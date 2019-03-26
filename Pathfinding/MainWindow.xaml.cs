@@ -24,7 +24,9 @@ namespace Pathfinding
         private CustomGrid grid;
         private Unit[] units;
         private GridWindow gridWindow;
-
+        private List<int> xChecked = new List<int>();
+        private List<int> yChecked = new List<int>();
+ 
         public MainWindow()
         {
             InitializeComponent();
@@ -111,7 +113,134 @@ namespace Pathfinding
             {
                 int newX = Convert.ToInt32(Interaction.InputBox("New X Position:", "Move Unit", "0"));
                 int newY = Convert.ToInt32(Interaction.InputBox("New Y Position:", "Move Unit", "0"));
+                FindPath(x, y, newX, newY, x, y);
             }            
+        }
+
+        private int FindPath(int x, int y, int newX, int newY, int lastX, int lastY)
+        {
+            Console.WriteLine("Testing " + x + " " + y);
+            this.xChecked.Add(x);
+            this.yChecked.Add(y);
+
+            //0 = left, 1 = right, 2 = down, 3 = up
+            int[] possibleSpaces = CheckAjacentSpaces(x, y);
+
+            if(x == newX && y == newY)
+            {
+                MessageBox.Show("Space found!!");
+                return 1;
+            }
+
+            if(possibleSpaces[0] == 1 && x - 1 != lastX)
+            {
+                lastX = x;
+                lastY = y;
+                Boolean check = true;
+                for (int i = 0; i < this.xChecked.Count; i++)
+                {
+                    if (x - 1 == xChecked[i] && y == yChecked[i])
+                    {
+                        check = false;
+                    }
+                }
+
+                if (check == true && x - 1 > 0)
+                {
+                    FindPath(x - 1, y, newX, newY, lastX, lastY);
+                }
+            }
+
+            if (possibleSpaces[1] == 1 && x + 1 != lastX)
+            {
+                lastX = x;
+                lastY = y;
+                Boolean check = true;
+                for (int i = 0; i < this.xChecked.Count; i++)
+                {
+                    if (x + 1 == xChecked[i] && y == yChecked[i])
+                    {
+                        check = false;
+                    }
+                }
+
+                if (check == true && x + 1 < this.grid.GetGridX() - 1)
+                {
+                    FindPath(x + 1, y, newX, newY, lastX, lastY);
+                }
+            }
+
+            if (possibleSpaces[2] == 1 && y + 1 != lastY)
+            {
+                lastX = x;
+                lastY = y;
+                Boolean check = true;
+                for (int i = 0; i < this.xChecked.Count; i++)
+                {
+                    if (x == xChecked[i] && y + 1 == yChecked[i])
+                    {
+                        check = false;
+                    }
+                }
+
+                if (check == true && y + 1 < this.grid.GetGridY() - 1)
+                {
+                    FindPath(x, y + 1, newX, newY, lastX, lastY);
+                }
+            }
+
+            if (possibleSpaces[3] == 1 && y - 1 != lastY)
+            {
+                lastX = x;
+                lastY = y;
+                Boolean check = true;
+                for (int i = 0; i < this.xChecked.Count; i++)
+                {
+                    if (x == xChecked[i] && y - 1 == yChecked[i])
+                    {
+                        check = false;
+                    }
+                }
+
+                if (check == true && y - 1 > 0)
+                {
+                    FindPath(x, y - 1, newX, newY, lastX, lastY);
+                }
+            }
+
+            return 0;
+        }
+
+        private int[] CheckAjacentSpaces(int x, int y)
+        {
+            int[] possibleSpaces = new int[4];
+
+            for (int i = 0; i < 3; i ++)
+            {
+                possibleSpaces[i] = 0;
+            }
+
+            if (x - 1 >= 0 && this.grid.GetGridPosition(x - 1, y) != 3 && this.grid.GetGridPosition(x - 1, y) != 1)
+            {
+                possibleSpaces[0] = 1;
+            }
+
+            if (x + 1 <= this.grid.GetGridX() && this.grid.GetGridPosition(x + 1, y) != 3 && this.grid.GetGridPosition(x + 1, y) != 1)
+            {
+                possibleSpaces[1] = 1;
+            }
+
+            if (y + 1 <= this.grid.GetGridY() && this.grid.GetGridPosition(x, y + 1) != 3 && this.grid.GetGridPosition(x, y + 1) != 1)
+            {
+                possibleSpaces[2] = 1;
+            }
+
+            if (y - 1 >= 0 && this.grid.GetGridPosition(x, y - 1) != 3 && this.grid.GetGridPosition(x, y - 1) != 1)
+            {
+                possibleSpaces[3] = 1;
+            }
+
+            return possibleSpaces;
         }
     }
 }
