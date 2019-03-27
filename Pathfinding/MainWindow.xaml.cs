@@ -183,6 +183,10 @@ namespace Pathfinding
                     }
 
                 }
+                else
+                {
+                    MessageBox.Show("Could not find a valid path");
+                }
             }            
         }
 
