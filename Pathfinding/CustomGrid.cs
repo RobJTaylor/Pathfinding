@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace Pathfinding
 {
+    /**
+     * CustomGrid - this is the grid in which the game takes place
+     * The game takes place on a 2D array of type GridSpace
+     */
     class CustomGrid
     {
         private GridSpace[,] grid;
@@ -22,10 +26,13 @@ namespace Pathfinding
             this.probability = probability;
             this.units = units + 1;
 
-            //PrintGrid();
+            //Populate the grid on construct
             PopulateGrid();
         }
 
+        /**
+         * PrintGrid - Print the grid to console
+         */
         public void PrintGrid()
         {
             Console.WriteLine(" === Grid Contents ===");
@@ -46,6 +53,9 @@ namespace Pathfinding
             }
         }
 
+        /**
+         * PopulateGrid - populate the grid with GridSpaces
+         */
         public void PopulateGrid()
         {
             Random random = new Random();
@@ -54,24 +64,29 @@ namespace Pathfinding
             int currentSpace = 0;
             int usableTerrain = 0;
 
+            //Loop through the grid columns and rows
             for (int y = 0; y < this.y; y++)
             {
                 for (int x = 0; x < this.x; x++)
                 {
                     int rand = random.Next(100);
 
+                    //If unit requires this space to be useable terrain, set it correctly
                     if(spaces - currentSpace == this.units - usableTerrain || spaces - currentSpace < this.units - usableTerrain)
                     {
                         GridSpace space = new GridSpace(0);
                         this.grid[x, y] = space;
                         usableTerrain++;
                     }
+                    //If random is less than user set probability make useable terrain
                     else if (rand < this.probability)
                     {
                         GridSpace space = new GridSpace(0);
                         this.grid[x, y] = space;
                         usableTerrain++;
-                    } else
+                    }
+                    //Else make it unusable terrain
+                    else
                     {
                         GridSpace space = new GridSpace(1);
                         this.grid[x, y] = space;
@@ -82,13 +97,21 @@ namespace Pathfinding
             }
         }
 
+        /**
+         * SetPlace - set a place occupant
+         * int oldX - old space x location to remove occupant from
+         * int oldY - old space y location to remove occupant from
+         * int newX - new space x location to add occupant to
+         * int newY - new space y location to add occupant to
+         * int unit - the unit to be added to the space
+         */
         public void SetPlace(int oldX, int oldY, int newX, int newY, int unit)
         {
             this.grid[oldX, oldY].RemoveOccupant();
             this.grid[newX, newY].SetSpaceOccupant(unit);
         }
 
-        // Getters and Setters
+        // Getters
         public int GetGridX()
         {
             return this.x;
